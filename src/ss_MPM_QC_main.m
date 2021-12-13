@@ -6,16 +6,23 @@ function ss_MPM_QC_main()
 %--------------------------------------------------------------------------
 % fast version for OHBM2021 :)
 
+close all; clear all;clc;
+
+
 % input Folder
 % TO DO :  shoudl be a  SPM batch - input
 
-main_path = '/media/siya/CRC_DATA_ss/cof_processed/pipeline-03';
+% main_path = '/media/siya/CRC_DATA_ss/cof_processed/pipeline-03';
+main_path = '/media/siya/CRC_DATA_ss/MPM_multi/OUT_DATA/derivative-04';
 
 % list all the qc json (easy way to grep the hMRI output results, 
 % WARNING - might grep different runs of hMRI , TO DO , exclude) 
 % or ask user to select the list 
-list_qc_json = spm_select('FPListRec',main_path,'^hMRI_map_creation_quality_assessment.*.json$');
 
+% list_qc_json = spm_select('FPListRec',main_path,'^hMRI_map_creation_quality_assessment.*.json$');
+
+% list_qc_json =  spm_select('FPListRec',spm_select('FPListRec',main_path,'dir','^acq_lowb1FA'),'^hMRI_map_creation_quality_assessment.*.json$');
+list_qc_json =  spm_select('FPListRec',spm_select('FPListRec',main_path,'dir','^acq_lowb1FA'),'MTw_OLS.*.json$');
 
 % % % SPM segement out of OLFfit  
 % % % segmenation could be inculded in the QC 
@@ -26,7 +33,7 @@ list_qc_json = spm_select('FPListRec',main_path,'^hMRI_map_creation_quality_asse
 
 % main out folder
 % TO DO spm batch job input 
-out_main_path = '/media/siya/CRC_DATA_ss/cof_processed/pipeline-03/MPM-QC';
+out_main_path = '/media/siya/CRC_DATA_ss/MPM_multi/OUT_DATA/MPM-QC';
 if ~exist(out_main_path);mkdir(out_main_path);end
 
 % create the table csv for plotting the boxplots 
@@ -55,16 +62,44 @@ if run_code == 1
 
         TT = [];
         
+        
         % get the BIDS name 
         % this is a dirty way of doing it , should be easy with BIDS naming 
         % specific problem for this data set 
-        TT.name  = list_qc_json(i,strfind(list_qc_json(i,:),'COF'):strfind(list_qc_json(i,:),'COF')+5)  ;
+%         TT.name  = list_qc_json(i,strfind(list_qc_json(i,:),'COF'):strfind(list_qc_json(i,:),'COF')+5)  ;
+        clear tmp_basename;
+        % get the MTw name
+        tmp_basename = spm_file(list_qc_json(i,:),'basename');
+        % remove the extra part
+        tmp_basename(strfind(tmp_basename,'PDw_echo-'):end)=[];
+        TT.name  =   sprintf('%30s',tmp_basename);
+        
+        % read qc matrix
+        mpm_qc = spm_jsonread(spm_select('FPList',spm_file(list_qc_json(i,:),'path'),'hMRI_map_creation_quality_assessment.json'));
+        
+        
         
         % tivFfile 
-        tiv_file = spm_select('FPList',spm_file(spm_file(strtrim(list_qc_json(i,:)),'path'),'filename','Segmentation'),'.*_TIV_SPM12.txt$');
+        tiv_file = spm_select('FPListRec',spm_file(spm_file(spm_file(strtrim(list_qc_json(i,:)),'path'),'path'),'path'),'.*TIV.txt$');
+        
+        % norm of first three values (euclidian movement)
+        % TO DO motion fingerprint
+        TT.MT2PD = norm(mpm_qc.ContrastCoreg.MT2PD(1:3));
+        TT.T12PD = norm(mpm_qc.ContrastCoreg.T12PD(1:3));
+        
+        % SDR2s
+        TT.SDR2s_MTw = mpm_qc.SDR2s.MTw;
+        TT.SDR2s_PDw = mpm_qc.SDR2s.PDw;
+        TT.SDR2s_T1w = mpm_qc.SDR2s.T1w;
+        
+        % PD 
+        TT.PD_cov = mpm_qc.PD.SD./mpm_qc.PD.mean;
+        
         
         % this is pecific for this 
-        TT.name_R  =  sprintf('%28s',strrep(spm_file(tiv_file,'filename'),'_T1w_OLSfit_TEzero_TIV_SPM12.txt',''));
+%         TT.name_R  =  sprintf('%28s',strrep(spm_file(tiv_file,'filename'),'_T1w_OLSfit_TEzero_TIV_SPM12.txt',''));
+          % tivFfile 
+        tiv_file = spm_select('FPListRec',spm_file(spm_file(spm_file(strtrim(list_qc_json(i,:)),'path'),'path'),'path'),'.*TIV.txt$');
          
         T_tiv = readtable(tiv_file);
 
@@ -91,7 +126,6 @@ end
 % parfor
 for i = 1:size(list_qc_json,1)
     ss_create_html_report(strtrim(list_qc_json(i,:)),out_table_csv,out_main_path); % fill array with participants data
-    
 end
 % delete(gcp('nocreate'));
 

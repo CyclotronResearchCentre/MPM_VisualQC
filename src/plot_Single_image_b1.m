@@ -1,4 +1,4 @@
-function out_png_fold = plot_Single_image(plot_info)
+function [out_png_fold,b1_reslice] = plot_Single_image_b1(plot_info)
   
     % define out folder , create folder if it doesnt exist
     out_png_fold = fullfile(plot_info.out_fold_img,plot_info.subj_name_vst,plot_info.suffix);
@@ -39,11 +39,55 @@ function out_png_fold = plot_Single_image(plot_info)
     end
     
     if run_code == 1
-        %read T1
-        img_T1_vol = spm_vol(plot_info.T1);
+        
+        temp_t1 =  spm_file(plot_info.T1,'path',out_png_fold);
+        temp_b1 =  spm_file(plot_info.b1,'path',out_png_fold);
+        
+        
+        
+        b1_reslice = spm_file(temp_b1,'suffix','_reslice');
+        
+        if ~exist(b1_reslice,'file')
+            
+            spm_copy(plot_info.T1,temp_t1)
+            spm_copy(plot_info.b1,temp_b1)
+        
+            spm('defaults','pet');
+            global defaults;
+            spm_jobman('initcfg');
+            
+            clear matlabbatch;
+
+            matlabbatch{1}.spm.util.imcalc.input = {temp_t1,temp_b1}';
+            matlabbatch{1}.spm.util.imcalc.output = spm_file(b1_reslice,'filename');
+            matlabbatch{1}.spm.util.imcalc.outdir = {spm_file(b1_reslice,'path')};
+            matlabbatch{1}.spm.util.imcalc.expression = 'i2';
+            matlabbatch{1}.spm.util.imcalc.var = struct('name', {}, 'value', {});
+            matlabbatch{1}.spm.util.imcalc.options.dmtx = 0;
+            matlabbatch{1}.spm.util.imcalc.options.mask = 0;
+            matlabbatch{1}.spm.util.imcalc.options.interp = 1;
+            matlabbatch{1}.spm.util.imcalc.options.dtype = 4;
+
+            batch_file = fullfile(out_png_fold,['batch_b1_reslice_job.m']);
+
+            [job_id, mod_job_idlist] = cfg_util('initjob',matlabbatch);
+            cfg_util('savejob', job_id, batch_file);
+
+            output_part = spm_jobman('run',matlabbatch);
+
+            clear matlabbatch;
+            
+            delete(temp_t1)
+            delete(temp_b1)
+        end
+
+        
+        
+        %read b1 resliced 
+        img_b1_vol = spm_vol(b1_reslice);
         
         close all
-        so = slover(img_T1_vol);
+        so = slover(img_b1_vol);
 
         so.xslices          = plot_info.xslices ;
         so.transform        = plot_info.transform;
@@ -69,6 +113,10 @@ function out_png_fold = plot_Single_image(plot_info)
         end
 
         close all
+        
+    else
+        temp_b1 =  spm_file(plot_info.b1,'path',out_png_fold);
+        b1_reslice = spm_file(temp_b1,'suffix','_reslice');
     end
     
 end
