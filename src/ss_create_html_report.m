@@ -230,12 +230,14 @@ plot_gif.sl_def.Sagit   = [-127 1 128;-127 1 128];
 % plot_gif.sl_def.Coron   = [-90 1 89;-127 1 128];
 plot_gif.xslices        = 1;
 plot_gif.lim            = lim ;   
+
 %     plot_gif.fig_Position  = [155   503   970   175];
 plot_gif.fig_Position   = [2013 464 193 274];
 plot_gif.num_frames     = 4;
 plot_gif.num_of_image   = 9;
 plot_gif.img            = img;
 plot_gif.out_fold_img   = out_fold_img;
+
 plot_gif.delay.begin    = 1.50;
 plot_gif.delay.mid      = 0.90;
 plot_gif.delay.end      = 1.50;
@@ -246,7 +248,7 @@ plot_gif.suffix         = 'all_gif';
 % plot_gif.cmap2          = 'red';
 % plot_gif.img_2          = c_seg{1};
 
-out_t1_c1_gif = create_gif_norm(plot_gif);
+% out_t1_c1_gif = create_gif_norm(plot_gif);
 
 
 
@@ -297,7 +299,7 @@ ss_boxplot_html(fid_html, subj_info_tab.SDR2s_PDw , tmp_table.SDR2s_PDw,'SDR2s_P
 ss_boxplot_html(fid_html, subj_info_tab.SDR2s_T1w , tmp_table.SDR2s_T1w,'SDR2s_T1w',7,19)
 
 % PD_cov
-ss_boxplot_html(fid_html, subj_info_tab.PD_cov , tmp_table.PD_cov,'PD_cov',0.070,0.2)
+ss_boxplot_html(fid_html, subj_info_tab.PD_cov , tmp_table.PD_cov,'PD SD/mean ',0.070,0.2)
 
 
 
@@ -320,6 +322,26 @@ ss_boxplot_html(fid_html, subj_info_tab.c2 , tmp_table.c2,'c2(Liter)',0.2,0.7)
 ss_boxplot_html(fid_html, subj_info_tab.c3 , tmp_table.c3,'c3(Liter)',0.2,0.7)
 % tiv
 ss_boxplot_html(fid_html, subj_info_tab.tiv , tmp_table.tiv,'tiv(Liter)',1.25,1.38)
+
+% c1 ratio
+ss_boxplot_html(fid_html, subj_info_tab.c1_tiv*100 , tmp_table.c1_tiv*100,'c1/tiv (%)',10,50)
+% c2 ratio
+ss_boxplot_html(fid_html, subj_info_tab.c2_tiv*100 , tmp_table.c2_tiv*100,'c2/tiv (%)',10,50)
+% c3 ratio
+ss_boxplot_html(fid_html, subj_info_tab.c3_tiv*100 , tmp_table.c3_tiv*100,'c3/tiv (%)',10,50)
+
+
+% CNR
+ss_boxplot_html(fid_html, subj_info_tab.MTSat_CNR, tmp_table.MTSat_CNR,'MTSat CNR',0, 3)
+ss_boxplot_html(fid_html, subj_info_tab.PD_CNR, tmp_table.PD_CNR,'PD CNR',0, 3)
+ss_boxplot_html(fid_html, subj_info_tab.R1_CNR, tmp_table.R1_CNR,'R1 CNR',0, 3)
+ss_boxplot_html(fid_html, subj_info_tab.R2_CNR, tmp_table.R2_CNR,'R2s CNR',0, 3)
+
+% SNR
+ss_boxplot_html(fid_html, subj_info_tab.MTSat_SNR_gm, tmp_table.MTSat_SNR_gm,'MTSat GM SNR',0, 10)
+ss_boxplot_html(fid_html, subj_info_tab.PD_SNR_gm, tmp_table.PD_SNR_gm,'PD GM SNR',0, 10)
+ss_boxplot_html(fid_html, subj_info_tab.R1_SNR_gm, tmp_table.R1_SNR_gm,'R1 GM SNR',0, 10)
+ss_boxplot_html(fid_html, subj_info_tab.R2_SNR_gm, tmp_table.R2_SNR_gm,'R2s GM SNR',0, 10)
 
 %**************************************************************************
 %-------------------------------------------------------------------

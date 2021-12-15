@@ -113,6 +113,11 @@ if run_code == 1
         TT.c2_tiv = round(T_tiv.Volume2 ./ TT.tiv,2);
         TT.c3_tiv = round(T_tiv.Volume3 ./ TT.tiv,2);
         
+        c6seg = spm_select('FPList',spm_file(spm_file(spm_file(list_qc_json(i,:),'path'),'path'),'filename','Segment'),'^c6.*.nii');
+        
+        TT = other_qcPar(TT,c6seg);
+        
+        
         % add the json file values QC
 
         subj_info_table = [subj_info_table ; struct2table(TT) ];

@@ -16,9 +16,9 @@ fprintf(fid_html,'// set the dimensions and margins of the graph \n');
 
 fprintf(fid_html,'var margin = {top: 10, right: 10, bottom: 30, left: 60}, \n');
 
-fprintf(fid_html,'  width = 150 - margin.left - margin.right, \n');
+fprintf(fid_html,'  width = 120 - margin.left - margin.right, \n');
 
-fprintf(fid_html,'  height = 400 - margin.top - margin.bottom; \n');
+fprintf(fid_html,'  height = 200 - margin.top - margin.bottom; \n');
 
 
 fprintf(fid_html,'// append the svg object to the body of the page \n');
