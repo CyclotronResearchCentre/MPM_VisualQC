@@ -10,7 +10,7 @@ function [lim_axial,lim_sagittal,lim_coronal] = lim_slices_MPM(c_seg)
     [img_x, img_y, img_z]  = size(V_img);
     
     
-    % Axial
+    % Sag 
     f_a = zeros(1,img_z);
     
     for z=1:img_z
@@ -38,13 +38,13 @@ function [lim_axial,lim_sagittal,lim_coronal] = lim_slices_MPM(c_seg)
             end
             % voxel to real 
             A1 = Y_img.mat*[find(f_x, 1 ) find(f_y,1) z 1]';
-            f_a(z)= A1(3);  
+            f_a(z)= A1(1);  
         end
         
 
     end
-%     lim_axial = [f_a(find(f_a,1,'first')) f_a(find(f_a, 1, 'last' ))];
-    lim_axial = [max(f_a(f_a~=0)) min(f_a(f_a~=0))];
+    lim_sagittal = [min(f_a(f_a~=0)) max(f_a(f_a~=0))];
+
     %----------------------------------------------------------------------
     f_b = zeros(1,img_x);
     
@@ -72,15 +72,15 @@ function [lim_axial,lim_sagittal,lim_coronal] = lim_slices_MPM(c_seg)
             
             A1 = Y_img.mat*[x find(f_y, 1 ) find(f_z,1) 1]';
             
-            f_b(x)= A1(1);  
+            f_b(x)= A1(2);  
             
         end
         
     end
-%     lim_sagittal = [f_b(find(f_b,1,'first')) f_b(find(f_b, 1, 'last' ))];
-    lim_sagittal = [max(f_b(f_b~=0)) min(f_b(f_b~=0))];
+
+    lim_coronal = [min(f_b(f_b~=0)) max(f_b(f_b~=0))];
     %----------------------------------------------------------------------
-    % coronal
+    % 
     f_c = zeros(1,img_y);
     
     for y=1:img_y
@@ -108,12 +108,12 @@ function [lim_axial,lim_sagittal,lim_coronal] = lim_slices_MPM(c_seg)
             
             A1 = Y_img.mat*[find(f_x,1)  y find(f_z,1) 1]';
             
-            f_c(y)= A1(2);  
+            f_c(y)= A1(3);  
             
         end
         
     end
-%     lim_coronal = [f_c(find(f_c,1,'first')) f_c(find(f_c,1,'last'))];
-    lim_coronal = [max(f_c(f_c~=0)) min(f_c(f_c~=0))];
+    
+    lim_axial = [min(f_c(f_c~=0)) max(f_c(f_c~=0))];
     
 end
