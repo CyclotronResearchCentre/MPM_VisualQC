@@ -4,7 +4,8 @@ function ss_MPM_QC_main()
 % 09DEC2021 
 % dependencies  SPM12
 %--------------------------------------------------------------------------
-% fast version for OHBM2021 :)
+% 02JUN2022
+% add QC for input images
 
 close all; clear all;clc;
 
@@ -13,7 +14,8 @@ close all; clear all;clc;
 % TO DO :  shoudl be a  SPM batch - input
 
 % main_path = '/media/siya/CRC_DATA_ss/cof_processed/pipeline-03';
-main_path = '/media/siya/CRC_DATA_ss/MPM_multi/OUT_DATA/derivative-04';
+% main_path = '/media/siya/CRC_DATA_ss/MPM_multi/OUT_DATA/derivative-04';
+main_path = '/media/siya/CRC_DATA_ss/MPM_multi/OUT_DATA/derivative-09a';
 
 % list all the qc json (easy way to grep the hMRI output results, 
 % WARNING - might grep different runs of hMRI , TO DO , exclude) 
@@ -33,7 +35,7 @@ list_qc_json =  spm_select('FPListRec',spm_select('FPListRec',main_path,'dir','^
 
 % main out folder
 % TO DO spm batch job input 
-out_main_path = '/media/siya/CRC_DATA_ss/MPM_multi/OUT_DATA/MPM-QC';
+out_main_path = '/media/siya/CRC_DATA_ss/MPM_multi/OUT_DATA/MPM_4echo-QC';
 if ~exist(out_main_path);mkdir(out_main_path);end
 
 % create the table csv for plotting the boxplots 
