@@ -1,4 +1,4 @@
-function ss_create_html_report(list_qc_json,out_table_csv,out_main_path)
+function ss_create_html_report(list_qc_json,out_table_csv,out_main_path,BIDS_in)
 
 % define tranformation matrix
 transform.axial     = [1 0 0 0 ; 0 1 0 0 ;  0 0 1 0 ; 0 0 0 1 ];
@@ -48,6 +48,13 @@ c_seg{1} = spm_select('FPList',spm_file(spm_file(spm_file(list_qc_json,'path'),'
 c_seg{2} = spm_select('FPList',spm_file(spm_file(spm_file(list_qc_json,'path'),'path'),'filename','Segment'),'^c2.*.nii');
 c_seg{3} = spm_select('FPList',spm_file(spm_file(spm_file(list_qc_json,'path'),'path'),'filename','Segment'),'^c3.*.nii');
 
+
+% get input images 
+
+img.in.MTw = spm_select('FPListrec',BIDS_in,['^' tmp_basename 'MTw.*.nii$']);
+img.in.PDw = spm_select('FPListrec',BIDS_in,['^' tmp_basename 'PDw.*.nii$']);
+img.in.T1w = spm_select('FPListrec',BIDS_in,['^' tmp_basename 'T1w.*.nii$']);
+
 % =====================================================================
 % generating png images startes here  
     
@@ -61,7 +68,7 @@ plot_info.suffix        = 'MTw_OLSfit_axial';
 plot_info.sl_def        = [-90 1 89;-127 1 128];
 plot_info.transform     = transform.axial;
 plot_info.xslices       = 1;
-plot_info.slices        = linspace(lim.axial(1)+40,lim.axial(2)-20,32);
+plot_info.slices        = linspace(lim.axial(1)+40,lim.axial(2)-20,40);
 %     plot_info.fig_Position  = [172   605   186   263];
 plot_info.fig_Position  = [2348 578 202 285];
 plot_info.fig_cmap      = 'gray';
@@ -80,7 +87,7 @@ plot_info.suffix        = 'PDw_OLSfit_axial';
 plot_info.sl_def        = [-90 1 89;-127 1 128];
 plot_info.transform     = transform.axial;
 plot_info.xslices       = 1;
-plot_info.slices        = linspace(lim.axial(1)+40,lim.axial(2)-20,32);
+plot_info.slices        = linspace(lim.axial(1)+40,lim.axial(2)-20,40);
 %     plot_info.fig_Position  = [172   605   186   263];
 plot_info.fig_Position  = [2348 578 202 285];
 plot_info.fig_cmap      = 'gray';
@@ -102,7 +109,7 @@ plot_seg.transform      = transform.axial;
 plot_seg.t_prop         = 0.8;
 plot_seg.c_prop         = 0.5;
 plot_seg.xslices        = 1;
-plot_seg.slices         = linspace(lim.axial(1)+40,lim.axial(2)-20,32);
+plot_seg.slices         = linspace(lim.axial(1)+40,lim.axial(2)-20,40);
 plot_seg.fig_Position   = [2348 578 202 285];
 plot_seg.cmap2          = 'red';
 plot_seg.cmap3          = 'blue';
@@ -125,7 +132,7 @@ plot_info.suffix        = 'MTsat_axial';
 plot_info.sl_def        = [-90 1 89;-127 1 128];
 plot_info.transform     = transform.axial;
 plot_info.xslices       = 1;
-plot_info.slices        = linspace(lim.axial(1)+40,lim.axial(2)-20,32);
+plot_info.slices        = linspace(lim.axial(1)+40,lim.axial(2)-20,40);
 %     plot_info.fig_Position  = [172   605   186   263];
 plot_info.fig_Position  = [2348 578 202 285];
 plot_info.fig_cmap      = 'gray';
@@ -144,7 +151,7 @@ plot_info.suffix        = 'MPM_PD_axial';
 plot_info.sl_def        = [-90 1 89;-127 1 128];
 plot_info.transform     = transform.axial;
 plot_info.xslices       = 1;
-plot_info.slices        = linspace(lim.axial(1)+40,lim.axial(2)-20,32);
+plot_info.slices        = linspace(lim.axial(1)+40,lim.axial(2)-20,40);
 %     plot_info.fig_Position  = [172   605   186   263];
 plot_info.fig_Position  = [2348 578 202 285];
 plot_info.fig_cmap      = 'gray';
@@ -163,7 +170,7 @@ plot_info.suffix        = 'MPM_R1_axial';
 plot_info.sl_def        = [-90 1 89;-127 1 128];
 plot_info.transform     = transform.axial;
 plot_info.xslices       = 1;
-plot_info.slices        = linspace(lim.axial(1)+40,lim.axial(2)-20,32);
+plot_info.slices        = linspace(lim.axial(1)+40,lim.axial(2)-20,40);
 %     plot_info.fig_Position  = [172   605   186   263];
 plot_info.fig_Position  = [2348 578 202 285];
 plot_info.fig_cmap      = 'gray';
@@ -182,7 +189,7 @@ plot_info.suffix        = 'MPM_R2s_OLS_axial';
 plot_info.sl_def        = [-90 1 89;-127 1 128];
 plot_info.transform     = transform.axial;
 plot_info.xslices       = 1;
-plot_info.slices        = linspace(lim.axial(1)+40,lim.axial(2)-20,32);
+plot_info.slices        = linspace(lim.axial(1)+40,lim.axial(2)-20,40);
 %     plot_info.fig_Position  = [172   605   186   263];
 plot_info.fig_Position  = [2348 578 202 285];
 plot_info.fig_cmap      = 'gray';
@@ -201,7 +208,7 @@ plot_info.suffix        = 'MPM_B1_axial';
 plot_info.sl_def        = [-90 1 89;-127 1 128];
 plot_info.transform     = transform.axial;
 plot_info.xslices       = 1;
-plot_info.slices        = linspace(lim.axial(1)+40,lim.axial(2)-20,32);
+plot_info.slices        = linspace(lim.axial(1)+40,lim.axial(2)-20,40);
 %     plot_info.fig_Position  = [172   605   186   263];
 plot_info.fig_Position  = [2348 578 202 285];
 plot_info.fig_cmap      = 'gray';
@@ -250,8 +257,86 @@ plot_gif.suffix         = 'all_gif';
 
 % out_t1_c1_gif = create_gif_norm(plot_gif);
 
+% -------------------------------------------------------------------------
+% INPUTS 
 
+% plot MTw_echos axial structural
 
+for k=1:size(img.in.MTw,1)
+        
+    tmp_img = strtrim(img.in.MTw(k,1:end));
+    
+    tmp_suff = ['MTw_' sprintf('%s_%02d','echo',k) '_axial'];
+    
+    plot_info.suffix        = tmp_suff ;
+    plot_info.sl_def        = [-90 1 89;-127 1 128];
+    plot_info.transform     = transform.axial;
+    plot_info.xslices       = 1;
+    plot_info.slices        = linspace(lim.axial(1)+40,lim.axial(2)-20,10);
+    %     plot_info.fig_Position  = [172   605   186   263];
+    plot_info.fig_Position  = [2348 578 202 285];
+    plot_info.fig_cmap      = 'gray';
+    plot_info.range         = [0 1000];
+    plot_info.T1            = tmp_img;
+    plot_info.out_fold_img  = out_fold_img;
+    plot_info.subj_name_vst = subj_name_visit;
+
+    out.in_MTw.axial{k,1} = plot_Single_image(plot_info);
+    out.in_MTw.axial{k,2} = tmp_img;
+    
+end
+                           
+% plot PDw_echos axial structural
+
+for k=1:size(img.in.PDw,1)
+        
+    tmp_img = strtrim(img.in.PDw(k,1:end));
+    
+    tmp_suff = ['PDw_' sprintf('%s_%02d','echo',k) '_axial'];
+    
+    plot_info.suffix        = tmp_suff ;
+    plot_info.sl_def        = [-90 1 89;-127 1 128];
+    plot_info.transform     = transform.axial;
+    plot_info.xslices       = 1;
+    plot_info.slices        = linspace(lim.axial(1)+40,lim.axial(2)-20,10);
+    %     plot_info.fig_Position  = [172   605   186   263];
+    plot_info.fig_Position  = [2348 578 202 285];
+    plot_info.fig_cmap      = 'gray';
+    plot_info.range         = [0 1000];
+    plot_info.T1            = tmp_img;
+    plot_info.out_fold_img  = out_fold_img;
+    plot_info.subj_name_vst = subj_name_visit;
+
+    out.in_PDw.axial{k,1} = plot_Single_image(plot_info);
+    out.in_PDw.axial{k,2} = tmp_img;
+    
+end
+
+% plot T1w_echos axial structural
+
+for k=1:size(img.in.T1w,1)
+        
+    tmp_img = strtrim(img.in.T1w(k,1:end));
+    
+    tmp_suff = ['T1w_' sprintf('%s_%02d','echo',k) '_axial'];
+    
+    plot_info.suffix        = tmp_suff ;
+    plot_info.sl_def        = [-90 1 89;-127 1 128];
+    plot_info.transform     = transform.axial;
+    plot_info.xslices       = 1;
+    plot_info.slices        = linspace(lim.axial(1)+40,lim.axial(2)-20,10);
+    %     plot_info.fig_Position  = [172   605   186   263];
+    plot_info.fig_Position  = [2348 578 202 285];
+    plot_info.fig_cmap      = 'gray';
+    plot_info.range         = [0 1000];
+    plot_info.T1            = tmp_img;
+    plot_info.out_fold_img  = out_fold_img;
+    plot_info.subj_name_vst = subj_name_visit;
+
+    out.in_T1w.axial{k,1} = plot_Single_image(plot_info);
+    out.in_T1w.axial{k,2} = tmp_img;
+    
+end
 
 
 
@@ -370,7 +455,7 @@ fprintf(fid_html,'}\n');
 
 fprintf(fid_html,'.column {\n');
 fprintf(fid_html,'  float: left;\n');
-fprintf(fid_html,'  width: 12%%;\n');
+fprintf(fid_html,'  width: 10%%;\n');%siya
 fprintf(fid_html,'  padding: 0px;\n');
 fprintf(fid_html,'}\n');
 
@@ -470,6 +555,56 @@ fprintf(fid_html,'</table>\n');%end of table
 
 %----------------------------------------------------------------------
 img_count   = 0;
+
+%---------------------------------------------------------------------------
+% Insert in MTw echos
+
+% Hyperlink 
+% fprintf(fid_html,'<a id="MTw_echos_axial"</a>\n');
+
+fprintf(fid_html,'<h3>Structure MTw_echos_axial</h3>\n');
+
+fprintf(fid_html,'<p>MTw echos images in axial plane:</p>\n');
+fprintf(fid_html,'<a href="#List_full">List of Figures</a>\n');
+
+for k =1:size(out.in_MTw.axial,1)
+    [img_count] = print_img_html(fid_html,img_count,out.in_MTw.axial{k,2},...
+        out.in_MTw.axial{k,1},subj_name_visit,['MTw_echo_' sprintf('%02d',k) '_axial']);
+end
+
+%---------------------------------------------------------------------------
+% Insert in PDw echos
+
+% Hyperlink 
+% fprintf(fid_html,'<a id="MTw_echos_axial"</a>\n');
+
+fprintf(fid_html,'<h3>Structure PDw_echos_axial</h3>\n');
+
+fprintf(fid_html,'<p>PDw echos images in axial plane:</p>\n');
+fprintf(fid_html,'<a href="#List_full">List of Figures</a>\n');
+
+for k =1:size(out.in_PDw.axial,1)
+    [img_count] = print_img_html(fid_html,img_count,out.in_PDw.axial{k,2},...
+        out.in_PDw.axial{k,1},subj_name_visit,['PDw_echo_' sprintf('%02d',k) '_axial']);
+end
+
+%---------------------------------------------------------------------------
+% Insert in T1w echos
+
+% Hyperlink 
+% fprintf(fid_html,'<a id="MTw_echos_axial"</a>\n');
+
+fprintf(fid_html,'<h3>Structure T1w_echos_axial</h3>\n');
+
+fprintf(fid_html,'<p>T1w echos images in axial plane:</p>\n');
+fprintf(fid_html,'<a href="#List_full">List of Figures</a>\n');
+
+for k =1:size(out.in_T1w.axial,1)
+    [img_count] = print_img_html(fid_html,img_count,out.in_T1w.axial{k,2},...
+        out.in_T1w.axial{k,1},subj_name_visit,['T1w_echo_' sprintf('%02d',k) '_axial']);
+end
+
+%***************************************************************************
 %---------------------------------------------------------------------------
 % Insert MPM MT OLS fit
 

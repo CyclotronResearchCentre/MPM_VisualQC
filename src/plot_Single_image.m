@@ -30,7 +30,10 @@ function out_png_fold = plot_Single_image(plot_info)
         else
             % else save the new plot_info and set run_code = 1
             if size((dir(out_png_fold)),1)>2             
-                unix(['rm -rf ' out_png_fold '*.*']);         
+                tmp_list = spm_select('FPList',out_png_fold,'.*');    
+                for k=1:size(tmp_list,1)
+                    delete(strtrim(tmp_list(k,1:end)));
+                end
             end
             save(plot_info_file,'-struct','plot_info')
             run_code = 1;

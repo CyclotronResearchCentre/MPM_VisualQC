@@ -29,7 +29,7 @@ function [img_count] = print_img_html(fid_html,img_count,imgA,out_img_folder,sub
     end
     fprintf(fid_html,'</div>\n');
     
-
+    fprintf(fid_html,'<h6>----</h6>\n',imgA);
     % link to list of figures
 %     fprintf(fid_html,'<a href="#List_full">List of Figures</a>\n');
 

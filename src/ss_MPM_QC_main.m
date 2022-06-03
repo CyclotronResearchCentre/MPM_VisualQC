@@ -13,9 +13,9 @@ close all; clear all;clc;
 % input Folder
 % TO DO :  shoudl be a  SPM batch - input
 
-% main_path = '/media/siya/CRC_DATA_ss/cof_processed/pipeline-03';
-% main_path = '/media/siya/CRC_DATA_ss/MPM_multi/OUT_DATA/derivative-04';
-main_path = '/media/siya/CRC_DATA_ss/MPM_multi/OUT_DATA/derivative-09a';
+main_path   = '/media/siya/ss_14T_2022/MPM_TravelHead_Study/OUTDATA/derivative-01_def_val_with_smap';
+
+BIDS_in     = '/media/siya/ss_14T_2022/MPM_TravelHead_Study/BIDS-pseudo/';
 
 % list all the qc json (easy way to grep the hMRI output results, 
 % WARNING - might grep different runs of hMRI , TO DO , exclude) 
@@ -24,7 +24,7 @@ main_path = '/media/siya/CRC_DATA_ss/MPM_multi/OUT_DATA/derivative-09a';
 % list_qc_json = spm_select('FPListRec',main_path,'^hMRI_map_creation_quality_assessment.*.json$');
 
 % list_qc_json =  spm_select('FPListRec',spm_select('FPListRec',main_path,'dir','^acq_lowb1FA'),'^hMRI_map_creation_quality_assessment.*.json$');
-list_qc_json =  spm_select('FPListRec',spm_select('FPListRec',main_path,'dir','^acq_lowb1FA'),'MTw_OLS.*.json$');
+list_qc_json = spm_select('FPListRec',spm_select('FPListRec',main_path,'dir','^Results'),'MTw_OLS.*.json$');
 
 % % % SPM segement out of OLFfit  
 % % % segmenation could be inculded in the QC 
@@ -35,7 +35,7 @@ list_qc_json =  spm_select('FPListRec',spm_select('FPListRec',main_path,'dir','^
 
 % main out folder
 % TO DO spm batch job input 
-out_main_path = '/media/siya/CRC_DATA_ss/MPM_multi/OUT_DATA/MPM_4echo-QC';
+out_main_path = '/media/siya/ss_14T_2022/MPM_TravelHead_Study/OUTDATA/QC-test';
 if ~exist(out_main_path);mkdir(out_main_path);end
 
 % create the table csv for plotting the boxplots 
@@ -132,7 +132,7 @@ end
 % parpool('local',5)
 % parfor
 for i = 1:size(list_qc_json,1)
-    ss_create_html_report(strtrim(list_qc_json(i,:)),out_table_csv,out_main_path); % fill array with participants data
+    ss_create_html_report(strtrim(list_qc_json(i,:)),out_table_csv,out_main_path,BIDS_in); % fill array with participants data
 end
 % delete(gcp('nocreate'));
 
