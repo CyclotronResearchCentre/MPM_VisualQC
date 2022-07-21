@@ -44,16 +44,18 @@ img.MPM_R2s_OLS = spm_select('FPList',spm_file(spm_file(list_qc_json,'path'),'pa
 
 % c1;c2;c3
 
-c_seg{1} = spm_select('FPList',spm_file(spm_file(spm_file(list_qc_json,'path'),'path'),'filename','Segment'),'^c1.*.nii');
-c_seg{2} = spm_select('FPList',spm_file(spm_file(spm_file(list_qc_json,'path'),'path'),'filename','Segment'),'^c2.*.nii');
-c_seg{3} = spm_select('FPList',spm_file(spm_file(spm_file(list_qc_json,'path'),'path'),'filename','Segment'),'^c3.*.nii');
+c_seg{1} = spm_select('FPList',spm_file(spm_file(spm_file(list_qc_json,'path'),'path'),'filename','segment_TEzero'),'^c1.*.nii');
+c_seg{2} = spm_select('FPList',spm_file(spm_file(spm_file(list_qc_json,'path'),'path'),'filename','segment_TEzero'),'^c2.*.nii');
+c_seg{3} = spm_select('FPList',spm_file(spm_file(spm_file(list_qc_json,'path'),'path'),'filename','segment_TEzero'),'^c3.*.nii');
 
 
 % get input images 
 
-img.in.MTw = spm_select('FPListrec',BIDS_in,['^' tmp_basename 'MTw.*.nii$']);
-img.in.PDw = spm_select('FPListrec',BIDS_in,['^' tmp_basename 'PDw.*.nii$']);
-img.in.T1w = spm_select('FPListrec',BIDS_in,['^' tmp_basename 'T1w.*.nii$']);
+reor_in = fullfile(spm_file(spm_file(spm_file(spm_file(list_qc_json,'path'),'path'),'path'),'path'),'Reoriented');
+
+img.in.MTw = spm_select('FPListrec',reor_in,['^' tmp_basename 'MTw.*.nii$']);
+img.in.PDw = spm_select('FPListrec',reor_in,['^' tmp_basename 'PDw.*.nii$']);
+img.in.T1w = spm_select('FPListrec',reor_in,['^' tmp_basename 'T1w.*.nii$']);
 
 % =====================================================================
 % generating png images startes here  
@@ -246,7 +248,7 @@ plot_gif.img            = img;
 plot_gif.out_fold_img   = out_fold_img;
 
 plot_gif.delay.begin    = 1.50;
-plot_gif.delay.mid      = 0.90;
+plot_gif.delay.mid      = 0.20;
 plot_gif.delay.end      = 1.50;
 
 
@@ -338,7 +340,87 @@ for k=1:size(img.in.T1w,1)
     
 end
 
+%--------------------------------------------------------------------------
+% ----------------------------------------------------------------------
 
+% testing 
+% GIF Echos 
+
+% plot gif
+
+% set gif delay in sec
+
+plot_info_gif.suffix        = 'MTw_echo_gif_axial';
+plot_info_gif.sl_def        = [-90 1 89;-127 1 128];
+plot_info_gif.transform     = transform.axial;
+plot_info_gif.xslices       = 1;
+plot_info_gif.slices        = linspace(lim.axial(1)+40,lim.axial(2)-20,40);
+%     plot_info.fig_Position  = [172   605   186   263];
+plot_info_gif.fig_Position  = [2348 578 202 285];
+plot_info_gif.fig_cmap      = 'gray';
+plot_info_gif.range         = [0 1000];
+plot_info_gif.img           = img.in.MTw;
+plot_info_gif.out_fold_img  = out_fold_img;
+plot_info_gif.subj_name_vst = subj_name_visit;
+
+plot_info_gif.delay.begin    = 1.50;
+plot_info_gif.delay.mid      = 0.20; %0.90 old
+plot_info_gif.delay.end      = 1.50;
+
+
+out.MTw_gif_axial = create_gif_echos(plot_info_gif);
+
+%--------------------------------------------------------------------------
+
+% set gif delay in sec
+
+plot_info_gif.suffix        = 'PDw_echo_gif_axial';
+plot_info_gif.sl_def        = [-90 1 89;-127 1 128];
+plot_info_gif.transform     = transform.axial;
+plot_info_gif.xslices       = 1;
+plot_info_gif.slices        = linspace(lim.axial(1)+40,lim.axial(2)-20,40);
+%     plot_info.fig_Position  = [172   605   186   263];
+plot_info_gif.fig_Position  = [2348 578 202 285];
+plot_info_gif.fig_cmap      = 'gray';
+plot_info_gif.range         = [0 1000];
+plot_info_gif.img           = img.in.PDw;
+plot_info_gif.out_fold_img  = out_fold_img;
+plot_info_gif.subj_name_vst = subj_name_visit;
+
+plot_info_gif.delay.begin    = 1.50;
+plot_info_gif.delay.mid      = 0.20;
+plot_info_gif.delay.end      = 1.50;
+
+
+out.PDw_gif_axial = create_gif_echos(plot_info_gif);
+
+
+%--------------------------------------------------------------------------
+
+% set gif delay in sec
+
+plot_info_gif.suffix        = 'T1w_echo_gif_axial';
+plot_info_gif.sl_def        = [-90 1 89;-127 1 128];
+plot_info_gif.transform     = transform.axial;
+plot_info_gif.xslices       = 1;
+plot_info_gif.slices        = linspace(lim.axial(1)+40,lim.axial(2)-20,40);
+%     plot_info.fig_Position  = [172   605   186   263];
+plot_info_gif.fig_Position  = [2348 578 202 285];
+plot_info_gif.fig_cmap      = 'gray';
+plot_info_gif.range         = [0 1000];
+plot_info_gif.img           = img.in.T1w;
+plot_info_gif.out_fold_img  = out_fold_img;
+plot_info_gif.subj_name_vst = subj_name_visit;
+
+plot_info_gif.delay.begin    = 1.50;
+plot_info_gif.delay.mid      = 0.20;
+plot_info_gif.delay.end      = 1.50;
+
+
+out.T1w_gif_axial = create_gif_echos(plot_info_gif);
+
+
+% 9999999999999999999999999999999999999999999999999999999999999999999999999
 
 % ----------------------------------------------------------------------
 % HTML
@@ -527,7 +609,7 @@ fprintf(fid_html,'</style>\n');
     
 %     ----------------------------------------------------------------------
 % for the jump to content 
-fprintf(fid_html,'<h3>List of Figures</h3>\n');
+fprintf(fid_html,'<h3 style="clear:left;">List of Figures</h3>\n');
 fprintf(fid_html,'<a id="List_full"</a>\n');
 
 fprintf(fid_html,'<table>\n');
@@ -562,9 +644,9 @@ img_count   = 0;
 % Hyperlink 
 % fprintf(fid_html,'<a id="MTw_echos_axial"</a>\n');
 
-fprintf(fid_html,'<h3>Structure MTw_echos_axial</h3>\n');
+fprintf(fid_html,'<h3 style="clear:left;">Structure MTw_echos_axial</h3>\n');
 
-fprintf(fid_html,'<p>MTw echos images in axial plane:</p>\n');
+fprintf(fid_html,'<p style="clear:left;">MTw echos images in axial plane:</p>\n');
 fprintf(fid_html,'<a href="#List_full">List of Figures</a>\n');
 
 for k =1:size(out.in_MTw.axial,1)
@@ -572,15 +654,32 @@ for k =1:size(out.in_MTw.axial,1)
         out.in_MTw.axial{k,1},subj_name_visit,['MTw_echo_' sprintf('%02d',k) '_axial']);
 end
 
+
+%---------------------------------------------------------------------------
+% Insert in MTw echos gif
+
+% Hyperlink 
+% fprintf(fid_html,'<a id="MTw_echos_axial"</a>\n');
+
+fprintf(fid_html,'<h3 style="clear:left;">Structure GIF MTw_echos_axial</h3>\n');
+
+fprintf(fid_html,'<p style="clear:left;">MTw echos images in axial plane:</p>\n');
+fprintf(fid_html,'<a href="#List_full">List of Figures</a>\n');
+
+[img_count] = print_img_html(fid_html,img_count,[subj_name_visit ' MTw, Echos ' num2str(size(img.in.MTw,1))],...
+        out.MTw_gif_axial,subj_name_visit,'MTw_echo_gif_axial');
+    
+    
+
 %---------------------------------------------------------------------------
 % Insert in PDw echos
 
 % Hyperlink 
 % fprintf(fid_html,'<a id="MTw_echos_axial"</a>\n');
 
-fprintf(fid_html,'<h3>Structure PDw_echos_axial</h3>\n');
+fprintf(fid_html,'<h3 style="clear:left;">Structure PDw_echos_axial</h3>\n');
 
-fprintf(fid_html,'<p>PDw echos images in axial plane:</p>\n');
+fprintf(fid_html,'<p style="clear:left;">PDw echos images in axial plane:</p>\n');
 fprintf(fid_html,'<a href="#List_full">List of Figures</a>\n');
 
 for k =1:size(out.in_PDw.axial,1)
@@ -589,20 +688,58 @@ for k =1:size(out.in_PDw.axial,1)
 end
 
 %---------------------------------------------------------------------------
+
+% Insert in PDw echos gif
+
+% Hyperlink 
+% fprintf(fid_html,'<a id="MTw_echos_axial"</a>\n');
+
+fprintf(fid_html,'<h3 style="clear:left;">Structure GIF PDw_echos_axial</h3>\n');
+
+fprintf(fid_html,'<p style="clear:left;">PDw echos images in axial plane:</p>\n');
+fprintf(fid_html,'<a href="#List_full">List of Figures</a>\n');
+
+[img_count] = print_img_html(fid_html,img_count,[subj_name_visit ' PDw, Echos ' num2str(size(img.in.PDw,1))],...
+        out.PDw_gif_axial,subj_name_visit,'PDw_echo_gif_axial');
+
+
+%---------------------------------------------------------------------------
 % Insert in T1w echos
 
 % Hyperlink 
 % fprintf(fid_html,'<a id="MTw_echos_axial"</a>\n');
 
-fprintf(fid_html,'<h3>Structure T1w_echos_axial</h3>\n');
+fprintf(fid_html,'<h3 style="clear:left;">Structure T1w_echos_axial</h3>\n');
 
-fprintf(fid_html,'<p>T1w echos images in axial plane:</p>\n');
+fprintf(fid_html,'<p style="clear:left;">T1w echos images in axial plane:</p>\n');
 fprintf(fid_html,'<a href="#List_full">List of Figures</a>\n');
 
 for k =1:size(out.in_T1w.axial,1)
     [img_count] = print_img_html(fid_html,img_count,out.in_T1w.axial{k,2},...
         out.in_T1w.axial{k,1},subj_name_visit,['T1w_echo_' sprintf('%02d',k) '_axial']);
 end
+
+
+%---------------------------------------------------------------------------
+
+% Insert in T1w echos gif
+
+% Hyperlink 
+% fprintf(fid_html,'<a id="MTw_echos_axial"</a>\n');
+
+fprintf(fid_html,'<h3 style="clear:left;">Structure GIF T1w_echos_axial</h3>\n');
+
+fprintf(fid_html,'<p style="clear:left;">T1w echos images in axial plane:</p>\n');
+fprintf(fid_html,'<a href="#List_full">List of Figures</a>\n');
+
+[img_count] = print_img_html(fid_html,img_count,[subj_name_visit ' T1w, Echos ' num2str(size(img.in.T1w,1))],...
+        out.T1w_gif_axial,subj_name_visit,'T1w_echo_gif_axial');
+
+
+
+
+
+
 
 %***************************************************************************
 %---------------------------------------------------------------------------
@@ -611,9 +748,9 @@ end
 % Hyperlink 
 fprintf(fid_html,'<a id="MTw_OLSfit_axial"</a>\n');
 
-fprintf(fid_html,'<h3>Structure MTw_OLSfit_axial</h3>\n');
+fprintf(fid_html,'<h3 style="clear:left;">Structure MTw_OLSfit_axial</h3>\n');
 
-fprintf(fid_html,'<p>MTw_OLSfit_axial images in axial plane:</p>\n');
+fprintf(fid_html,'<p style="clear:left;">MTw_OLSfit_axial images in axial plane:</p>\n');
 fprintf(fid_html,'<a href="#List_full">List of Figures</a>\n');
 
 [img_count] = print_img_html(fid_html,img_count,img.MTw_OLSfit,out.MTw_OLSfit_axial_png_folder,subj_name_visit,'MTw_OLSfit_axial');
@@ -621,9 +758,9 @@ fprintf(fid_html,'<a href="#List_full">List of Figures</a>\n');
 %---------------------------------------------------------------------------
 % Insert MPM PD OLS fit
 
-fprintf(fid_html,'<h3>Structure PDw OLSfit axial</h3>\n');
+fprintf(fid_html,'<h3 style="clear:left;">Structure PDw OLSfit axial</h3>\n');
 
-fprintf(fid_html,'<p>PDw_OLSfit_axial images in axial plane:</p>\n');
+fprintf(fid_html,'<p style="clear:left;">PDw_OLSfit_axial images in axial plane:</p>\n');
 % Hyperlink 
 fprintf(fid_html,'<a id="PDw_OLSfit_axial"</a>\n');
 fprintf(fid_html,'<a href="#List_full">List of Figures</a>\n');
@@ -633,7 +770,7 @@ fprintf(fid_html,'<a href="#List_full">List of Figures</a>\n');
 %---------------------------------------------------------------------------
 % Insert MPM MT c1 overlay fit
 
-fprintf(fid_html,'<h3>Structure c1_MTwOLS_overlay axial</h3>\n');
+fprintf(fid_html,'<h3 style="clear:left;">Structure c1_MTwOLS_overlay axial</h3>\n');
 
 fprintf(fid_html,'<p>c1 MTwOLS_overlay images in axial plane:</p>\n');
 % Hyperlink 
@@ -645,7 +782,7 @@ fprintf(fid_html,'<a href="#List_full">List of Figures</a>\n');
 %---------------------------------------------------------------------------
 % Insert MPM MT c2 overlay fit
 
-fprintf(fid_html,'<h3>Structure c2_MTwOLS_overlay axial</h3>\n');
+fprintf(fid_html,'<h3 style="clear:left;">Structure c2_MTwOLS_overlay axial</h3>\n');
 
 fprintf(fid_html,'<p>c2_MTwOLS_overlayimages in axial plane:</p>\n');
 % Hyperlink 
@@ -658,7 +795,7 @@ fprintf(fid_html,'<a href="#List_full">List of Figures</a>\n');
 %---------------------------------------------------------------------------
 % Insert MPM MTsat axial
 
-fprintf(fid_html,'<h3>Structure MTsat Axial</h3>\n');
+fprintf(fid_html,'<h3 style="clear:left;">Structure MTsat Axial</h3>\n');
 
 fprintf(fid_html,'<p>MPM images in axial plane:</p>\n');
 
@@ -677,7 +814,7 @@ fprintf(fid_html,'<a id="MTsat_axial"</a>\n');
 % Hyperlink 
 
 
-fprintf(fid_html,'<h3>Structure MPM PD Axial</h3>\n');
+fprintf(fid_html,'<h3 style="clear:left;">Structure MPM PD Axial</h3>\n');
 
 fprintf(fid_html,'<p>MPM_PD_axial images in axial plane:</p>\n');
 
@@ -689,7 +826,7 @@ fprintf(fid_html,'<a id="MPM_PD_axial"</a>\n');
 %---------------------------------------------------------------------------
 % Insert MPM R1 axial
 
-fprintf(fid_html,'<h3>Structure MPM R1 Axial</h3>\n');
+fprintf(fid_html,'<h3 style="clear:left;">Structure MPM R1 Axial</h3>\n');
 
 fprintf(fid_html,'<p>MPM R1 images in axial plane:</p>\n');
 
@@ -703,7 +840,7 @@ fprintf(fid_html,'<a id="MPM_R1_axial"</a>\n');
 %---------------------------------------------------------------------------
 % Insert MPM R2s OLS axial
 
-fprintf(fid_html,'<h3>Structure MPM R2s OLS Axial</h3>\n');
+fprintf(fid_html,'<h3 style="clear:left;">Structure MPM R2s OLS Axial</h3>\n');
 
 
 fprintf(fid_html,'<a href="#List_full">List of Figures</a>\n');
@@ -717,7 +854,7 @@ fprintf(fid_html,'<p>MPM R2s OLS images in axial plane:</p>\n');
 %---------------------------------------------------------------------------
 % Insert MPM R2s OLS axial
 
-fprintf(fid_html,'<h3>Structure B1 map Axial</h3>\n');
+fprintf(fid_html,'<h3 style="clear:left;">Structure B1 map Axial</h3>\n');
 
 
 fprintf(fid_html,'<a href="#List_full">List of Figures</a>\n');

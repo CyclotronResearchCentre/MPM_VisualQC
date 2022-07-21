@@ -13,7 +13,7 @@ close all; clear all;clc;
 % input Folder
 % TO DO :  shoudl be a  SPM batch - input
 
-main_path   = '/media/siya/ss_14T_2022/MPM_TravelHead_Study/OUTDATA/derivative-01_def_val_with_smap';
+main_path   = '/media/siya/ss_14T_2022/MPM_TravelHead_Study/OUTDATA/derivative-01_def_val_with_smap_HiRes/';
 
 BIDS_in     = '/media/siya/ss_14T_2022/MPM_TravelHead_Study/BIDS-pseudo/';
 
@@ -74,7 +74,7 @@ if run_code == 1
         tmp_basename = spm_file(list_qc_json(i,:),'basename');
         % remove the extra part
         tmp_basename(strfind(tmp_basename,'PDw_echo-'):end)=[];
-        TT.name  =   sprintf('%30s',tmp_basename);
+        TT.name  =   sprintf('%35s',tmp_basename);
         
         % read qc matrix
         mpm_qc = spm_jsonread(spm_select('FPList',spm_file(list_qc_json(i,:),'path'),'hMRI_map_creation_quality_assessment.json'));
@@ -97,6 +97,21 @@ if run_code == 1
         % PD 
         TT.PD_cov = mpm_qc.PD.SD./mpm_qc.PD.mean;
         
+        log_file = spm_select('FPListRec',spm_file(strtrim(list_qc_json(i,:)),'path'),'hMRI_map_creation_logfile.log');
+        % read the log file
+        log_read = fileread(log_file);
+        % get the line 
+        C_line = regexp(log_read,'[^\n\r]+for calculated PD map:','match');
+        
+        if isempty(C_line)
+            fprintf('error in the PD movement line')
+        else
+            PDline = C_line{1}; 
+            % get the value 
+            PDchar = (PDline((strfind(PDline,'(')+1) : (strfind(PDline,')')-2)));
+            TT.PD_ErrEst = str2double(PDchar);
+        end
+        
         
         % this is pecific for this 
 %         TT.name_R  =  sprintf('%28s',strrep(spm_file(tiv_file,'filename'),'_T1w_OLSfit_TEzero_TIV_SPM12.txt',''));
@@ -115,7 +130,7 @@ if run_code == 1
         TT.c2_tiv = round(T_tiv.Volume2 ./ TT.tiv,2);
         TT.c3_tiv = round(T_tiv.Volume3 ./ TT.tiv,2);
         
-        c6seg = spm_select('FPList',spm_file(spm_file(spm_file(list_qc_json(i,:),'path'),'path'),'filename','Segment'),'^c6.*.nii');
+        c6seg = spm_select('FPList',spm_file(spm_file(spm_file(list_qc_json(i,:),'path'),'path'),'filename','segment_TEzero'),'^c6.*.nii');
         
         TT = other_qcPar(TT,c6seg);
         
