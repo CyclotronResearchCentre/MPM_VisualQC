@@ -4,7 +4,8 @@ function ss_MPM_QC_main()
 % 09DEC2021 
 % dependencies  SPM12
 %--------------------------------------------------------------------------
-% fast version for OHBM2021 :)
+% 02JUN2022
+% add QC for input images
 
 close all; clear all;clc;
 
@@ -12,8 +13,9 @@ close all; clear all;clc;
 % input Folder
 % TO DO :  shoudl be a  SPM batch - input
 
-% main_path = '/media/siya/CRC_DATA_ss/cof_processed/pipeline-03';
-main_path = '/media/siya/CRC_DATA_ss/MPM_multi/OUT_DATA/derivative-04';
+main_path   = '/media/siya/ss_14T_2022/MPM_TravelHead_Study/OUTDATA/derivative-01_def_val_with_smap_HiRes/';
+
+BIDS_in     = '/media/siya/ss_14T_2022/MPM_TravelHead_Study/BIDS-pseudo/';
 
 % list all the qc json (easy way to grep the hMRI output results, 
 % WARNING - might grep different runs of hMRI , TO DO , exclude) 
@@ -22,7 +24,7 @@ main_path = '/media/siya/CRC_DATA_ss/MPM_multi/OUT_DATA/derivative-04';
 % list_qc_json = spm_select('FPListRec',main_path,'^hMRI_map_creation_quality_assessment.*.json$');
 
 % list_qc_json =  spm_select('FPListRec',spm_select('FPListRec',main_path,'dir','^acq_lowb1FA'),'^hMRI_map_creation_quality_assessment.*.json$');
-list_qc_json =  spm_select('FPListRec',spm_select('FPListRec',main_path,'dir','^acq_lowb1FA'),'MTw_OLS.*.json$');
+list_qc_json = spm_select('FPListRec',spm_select('FPListRec',main_path,'dir','^Results'),'MTw_OLS.*.json$');
 
 % % % SPM segement out of OLFfit  
 % % % segmenation could be inculded in the QC 
@@ -33,7 +35,7 @@ list_qc_json =  spm_select('FPListRec',spm_select('FPListRec',main_path,'dir','^
 
 % main out folder
 % TO DO spm batch job input 
-out_main_path = '/media/siya/CRC_DATA_ss/MPM_multi/OUT_DATA/MPM-QC';
+out_main_path = '/media/siya/ss_14T_2022/MPM_TravelHead_Study/OUTDATA/QC-test';
 if ~exist(out_main_path);mkdir(out_main_path);end
 
 % create the table csv for plotting the boxplots 
@@ -72,7 +74,7 @@ if run_code == 1
         tmp_basename = spm_file(list_qc_json(i,:),'basename');
         % remove the extra part
         tmp_basename(strfind(tmp_basename,'PDw_echo-'):end)=[];
-        TT.name  =   sprintf('%30s',tmp_basename);
+        TT.name  =   sprintf('%35s',tmp_basename);
         
         % read qc matrix
         mpm_qc = spm_jsonread(spm_select('FPList',spm_file(list_qc_json(i,:),'path'),'hMRI_map_creation_quality_assessment.json'));
@@ -95,6 +97,21 @@ if run_code == 1
         % PD 
         TT.PD_cov = mpm_qc.PD.SD./mpm_qc.PD.mean;
         
+        log_file = spm_select('FPListRec',spm_file(strtrim(list_qc_json(i,:)),'path'),'hMRI_map_creation_logfile.log');
+        % read the log file
+        log_read = fileread(log_file);
+        % get the line 
+        C_line = regexp(log_read,'[^\n\r]+for calculated PD map:','match');
+        
+        if isempty(C_line)
+            fprintf('error in the PD movement line')
+        else
+            PDline = C_line{1}; 
+            % get the value 
+            PDchar = (PDline((strfind(PDline,'(')+1) : (strfind(PDline,')')-2)));
+            TT.PD_ErrEst = str2double(PDchar);
+        end
+        
         
         % this is pecific for this 
 %         TT.name_R  =  sprintf('%28s',strrep(spm_file(tiv_file,'filename'),'_T1w_OLSfit_TEzero_TIV_SPM12.txt',''));
@@ -113,7 +130,7 @@ if run_code == 1
         TT.c2_tiv = round(T_tiv.Volume2 ./ TT.tiv,2);
         TT.c3_tiv = round(T_tiv.Volume3 ./ TT.tiv,2);
         
-        c6seg = spm_select('FPList',spm_file(spm_file(spm_file(list_qc_json(i,:),'path'),'path'),'filename','Segment'),'^c6.*.nii');
+        c6seg = spm_select('FPList',spm_file(spm_file(spm_file(list_qc_json(i,:),'path'),'path'),'filename','segment_TEzero'),'^c6.*.nii');
         
         TT = other_qcPar(TT,c6seg);
         
@@ -130,7 +147,7 @@ end
 % parpool('local',5)
 % parfor
 for i = 1:size(list_qc_json,1)
-    ss_create_html_report(strtrim(list_qc_json(i,:)),out_table_csv,out_main_path); % fill array with participants data
+    ss_create_html_report(strtrim(list_qc_json(i,:)),out_table_csv,out_main_path,BIDS_in); % fill array with participants data
 end
 % delete(gcp('nocreate'));
 

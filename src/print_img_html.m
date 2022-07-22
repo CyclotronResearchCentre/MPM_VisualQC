@@ -3,12 +3,16 @@ function [img_count] = print_img_html(fid_html,img_count,imgA,out_img_folder,sub
 % siya sherif
 % 20 06 2019
 
-    fprintf(fid_html,'<p>%s</p>\n',imgA);
+    fprintf(fid_html,'<p style="clear:left;"> %s</p>\n',imgA);
     
     % list images
 %     img_list = dir([out_img_folder '*.png']);
+    
     img_list = spm_select('FPList',out_img_folder,'.*.png$');
-
+    if isempty(img_list)
+        img_list = spm_select('FPList',out_img_folder,'.*.gif$');
+    end
+    
     fprintf(fid_html,'<div class="row">\n');
     
     for i=1:size(img_list,1)
@@ -29,7 +33,6 @@ function [img_count] = print_img_html(fid_html,img_count,imgA,out_img_folder,sub
     end
     fprintf(fid_html,'</div>\n');
     
-
     % link to list of figures
 %     fprintf(fid_html,'<a href="#List_full">List of Figures</a>\n');
 
