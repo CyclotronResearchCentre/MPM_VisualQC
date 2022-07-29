@@ -57,6 +57,13 @@ img.in.MTw = spm_select('FPListrec',reor_in,['^' tmp_basename 'MTw.*.nii$']);
 img.in.PDw = spm_select('FPListrec',reor_in,['^' tmp_basename 'PDw.*.nii$']);
 img.in.T1w = spm_select('FPListrec',reor_in,['^' tmp_basename 'T1w.*.nii$']);
 
+img.MNI.MTw = spm_select('FPList',fullfile(spm_file(spm_file(spm_file(list_qc_json,'path'),'path'),'path'),'Results_USnorm'),'^w.*_MTsat.nii');
+img.MNI.PD = spm_select('FPList',fullfile(spm_file(spm_file(spm_file(list_qc_json,'path'),'path'),'path'),'Results_USnorm'),'^w.*RFSC_PD.nii');
+img.MNI.R1 = spm_select('FPList',fullfile(spm_file(spm_file(spm_file(list_qc_json,'path'),'path'),'path'),'Results_USnorm'),'^w.*RFSC_R1.nii');
+img.MNI.R2s = spm_select('FPList',fullfile(spm_file(spm_file(spm_file(list_qc_json,'path'),'path'),'path'),'Results_USnorm'),'^w.*_RFSC_R2s_OLS.nii');
+
+
+
 % =====================================================================
 % generating png images startes here  
     
@@ -226,7 +233,7 @@ plot_info.subj_name_vst = subj_name_visit;
 % ----------------------------------------------------------------------
 
 
-% GIF NORMAL
+% GIF 
 
 % plot gif
 
@@ -418,7 +425,105 @@ plot_info_gif.delay.end      = 1.50;
 
 
 out.T1w_gif_axial = create_gif_echos(plot_info_gif);
+%==========================================================================
+% MNI 
+% set gif delay in sec
 
+plot_info_gif.suffix        = 'MTw_MNI_gif_axial';
+plot_info_gif.sl_def        = [-90 1 89;-127 1 128];
+plot_info_gif.transform     = transform.axial;
+plot_info_gif.xslices       = 1;
+% plot_info_gif.slices        = linspace(lim.axial(1),lim.axial(2),40);
+plot_info_gif.slices        = linspace(-75,65,50); %MNI axial
+%     plot_info.fig_Position  = [172   605   186   263];
+plot_info_gif.fig_Position  = [2348 578 202 285];
+plot_info_gif.fig_cmap      = 'gray';
+plot_info_gif.range         = [0 2];
+plot_info_gif.img           = img.MNI.MTw;
+plot_info_gif.out_fold_img  = out_fold_img;
+plot_info_gif.subj_name_vst = subj_name_visit;
+
+plot_info_gif.delay.begin    = 1.00;
+plot_info_gif.delay.mid      = 0.20; %0.90 old
+plot_info_gif.delay.end      = 1.00;
+
+
+out.MTw_MNI_gif_axial = create_MNI_gif(plot_info_gif);
+
+%==========================================================================
+% MNI 
+% set gif delay in sec
+
+plot_info_gif.suffix        = 'PD_MNI_gif_axial';
+plot_info_gif.sl_def        = [-90 1 89;-127 1 128];
+plot_info_gif.transform     = transform.axial;
+plot_info_gif.xslices       = 1;
+% plot_info_gif.slices        = linspace(lim.axial(1),lim.axial(2),40);
+plot_info_gif.slices        = linspace(-75,65,50); %MNI axial
+%     plot_info.fig_Position  = [172   605   186   263];
+plot_info_gif.fig_Position  = [2348 578 202 285];
+plot_info_gif.fig_cmap      = 'gray';
+plot_info_gif.range         = [30 100];
+plot_info_gif.img           = img.MNI.PD;
+plot_info_gif.out_fold_img  = out_fold_img;
+plot_info_gif.subj_name_vst = subj_name_visit;
+
+plot_info_gif.delay.begin    = 1.00;
+plot_info_gif.delay.mid      = 0.20; %0.90 old
+plot_info_gif.delay.end      = 1.00;
+
+
+out.PD_MNI_gif_axial = create_MNI_gif(plot_info_gif);
+
+%==========================================================================
+% MNI 
+% set gif delay in sec
+
+plot_info_gif.suffix        = 'R1_MNI_gif_axial';
+plot_info_gif.sl_def        = [-90 1 89;-127 1 128];
+plot_info_gif.transform     = transform.axial;
+plot_info_gif.xslices       = 1;
+% plot_info_gif.slices        = linspace(lim.axial(1),lim.axial(2),40);
+plot_info_gif.slices        = linspace(-75,65,50); %MNI axial
+%     plot_info.fig_Position  = [172   605   186   263];
+plot_info_gif.fig_Position  = [2348 578 202 285];
+plot_info_gif.fig_cmap      = 'gray';
+plot_info_gif.range         = [0.2 1.4];
+plot_info_gif.img           = img.MNI.R1;
+plot_info_gif.out_fold_img  = out_fold_img;
+plot_info_gif.subj_name_vst = subj_name_visit;
+
+plot_info_gif.delay.begin    = 1.00;
+plot_info_gif.delay.mid      = 0.20; %0.90 old
+plot_info_gif.delay.end      = 1.00;
+
+
+out.R1_MNI_gif_axial = create_MNI_gif(plot_info_gif);
+
+%==========================================================================
+% MNI 
+% set gif delay in sec
+
+plot_info_gif.suffix        = 'R2s_MNI_gif_axial';
+plot_info_gif.sl_def        = [-90 1 89;-127 1 128];
+plot_info_gif.transform     = transform.axial;
+plot_info_gif.xslices       = 1;
+% plot_info_gif.slices        = linspace(lim.axial(1),lim.axial(2),40);
+plot_info_gif.slices        = linspace(-75,65,50); %MNI axial
+%     plot_info.fig_Position  = [172   605   186   263];
+plot_info_gif.fig_Position  = [2348 578 202 285];
+plot_info_gif.fig_cmap      = 'gray';
+plot_info_gif.range         = [0 80];
+plot_info_gif.img           = img.MNI.R2s;
+plot_info_gif.out_fold_img  = out_fold_img;
+plot_info_gif.subj_name_vst = subj_name_visit;
+
+plot_info_gif.delay.begin    = 1.00;
+plot_info_gif.delay.mid      = 0.20; %0.90 old
+plot_info_gif.delay.end      = 1.00;
+
+
+out.R2s_MNI_gif_axial = create_MNI_gif(plot_info_gif);
 
 % 9999999999999999999999999999999999999999999999999999999999999999999999999
 
@@ -459,14 +564,14 @@ tmp_table   =  subj_info_tab(contains(subj_info_tab{:,1},subj_name_visit),:);
 
 %------------------------------------------------------------------------
 % SDR2s_MTw
-ss_boxplot_html(fid_html, subj_info_tab.SDR2s_MTw , tmp_table.SDR2s_MTw,'SDR2s_MTw',7,19)
+ss_boxplot_html(fid_html, subj_info_tab.SDR2s_MTw , tmp_table.SDR2s_MTw,'SDR2s_MTw',5,19)
 % SDR2s_PDw
-ss_boxplot_html(fid_html, subj_info_tab.SDR2s_PDw , tmp_table.SDR2s_PDw,'SDR2s_PDw',7,19)
+ss_boxplot_html(fid_html, subj_info_tab.SDR2s_PDw , tmp_table.SDR2s_PDw,'SDR2s_PDw',5,19)
 % SDR2s_T1w
-ss_boxplot_html(fid_html, subj_info_tab.SDR2s_T1w , tmp_table.SDR2s_T1w,'SDR2s_T1w',7,19)
+ss_boxplot_html(fid_html, subj_info_tab.SDR2s_T1w , tmp_table.SDR2s_T1w,'SDR2s_T1w',5,19)
 
 % PD_cov
-ss_boxplot_html(fid_html, subj_info_tab.PD_cov , tmp_table.PD_cov,'PD SD/mean ',0.070,0.2)
+ss_boxplot_html(fid_html, subj_info_tab.PD_cov *100 , tmp_table.PD_cov *100,'PD SD/mean ',0.5,20)
 
 
 
@@ -482,13 +587,13 @@ minVal =  min([subj_info_tab.c1 ; subj_info_tab.c2 ; subj_info_tab.c3]);
 maxVal =  max([subj_info_tab.c1 ; subj_info_tab.c2 ; subj_info_tab.c3]);
 
 % c1
-ss_boxplot_html(fid_html, subj_info_tab.c1 , tmp_table.c1,'c1(Liter)',0.2,0.7)
+ss_boxplot_html(fid_html, subj_info_tab.c1 , tmp_table.c1,'c1(Liter)',0.3,0.9)
 % c2
 ss_boxplot_html(fid_html, subj_info_tab.c2 , tmp_table.c2,'c2(Liter)',0.2,0.7)
 % c3
 ss_boxplot_html(fid_html, subj_info_tab.c3 , tmp_table.c3,'c3(Liter)',0.2,0.7)
 % tiv
-ss_boxplot_html(fid_html, subj_info_tab.tiv , tmp_table.tiv,'tiv(Liter)',1.25,1.38)
+ss_boxplot_html(fid_html, subj_info_tab.tiv , tmp_table.tiv,'tiv(Liter)',1.25,1.5)
 
 % c1 ratio
 ss_boxplot_html(fid_html, subj_info_tab.c1_tiv*100 , tmp_table.c1_tiv*100,'c1/tiv (%)',10,50)
@@ -506,7 +611,7 @@ ss_boxplot_html(fid_html, subj_info_tab.R2_CNR, tmp_table.R2_CNR,'R2s CNR',0, 3)
 
 % SNR
 ss_boxplot_html(fid_html, subj_info_tab.MTSat_SNR_gm, tmp_table.MTSat_SNR_gm,'MTSat GM SNR',0, 10)
-ss_boxplot_html(fid_html, subj_info_tab.PD_SNR_gm, tmp_table.PD_SNR_gm,'PD GM SNR',0, 10)
+ss_boxplot_html(fid_html, subj_info_tab.PD_SNR_gm, tmp_table.PD_SNR_gm,'PD GM SNR',0, 15)
 ss_boxplot_html(fid_html, subj_info_tab.R1_SNR_gm, tmp_table.R1_SNR_gm,'R1 GM SNR',0, 10)
 ss_boxplot_html(fid_html, subj_info_tab.R2_SNR_gm, tmp_table.R2_SNR_gm,'R2s GM SNR',0, 10)
 
@@ -866,7 +971,67 @@ fprintf(fid_html,'<p>MPM B1 map images in axial plane:</p>\n');
 [img_count] = print_img_html(fid_html,img_count,img.B1map,out.MPM_B1_axial_png_folder,subj_name_visit,'MPM_B1_axial');
 %---------------------------------------------------------------------------
 
+%---------------------------------------------------------------------------
 
+% Insert in MTw MNI gif
+
+% Hyperlink 
+% fprintf(fid_html,'<a id="MTw_echos_axial"</a>\n');
+
+%fprintf(fid_html,'<h3 style="clear:left;">Structure GIF T1w_echos_axial</h3>\n');
+
+fprintf(fid_html,'<p style="clear:left;">MTw MNI images in axial plane:</p>\n');
+fprintf(fid_html,'<a href="#List_full">List of Figures</a>\n');
+
+[img_count] = print_img_html(fid_html,img_count,[subj_name_visit ' MNI wap1 wap1 MTw ' num2str(size(img.MNI.MTw,1))],...
+        out.MTw_MNI_gif_axial,subj_name_visit,'MTw_MNI_gif_axial');
+
+    
+%---------------------------------------------------------------------------
+
+% Insert in PD MNI gif
+
+% Hyperlink 
+% fprintf(fid_html,'<a id="MTw_echos_axial"</a>\n');
+
+%fprintf(fid_html,'<h3 style="clear:left;">Structure GIF T1w_echos_axial</h3>\n');
+
+fprintf(fid_html,'<p style="clear:left;">PD MNI images in axial plane:</p>\n');
+fprintf(fid_html,'<a href="#List_full">List of Figures</a>\n');
+
+[img_count] = print_img_html(fid_html,img_count,[subj_name_visit ' MNI wap1 wap1 PD ' num2str(size(img.MNI.PD,1))],...
+        out.PD_MNI_gif_axial,subj_name_visit,'PD_MNI_gif_axial');    
+    
+    
+%---------------------------------------------------------------------------
+
+% Insert in PD MNI gif
+
+% Hyperlink 
+% fprintf(fid_html,'<a id="MTw_echos_axial"</a>\n');
+
+%fprintf(fid_html,'<h3 style="clear:left;">Structure GIF T1w_echos_axial</h3>\n');
+
+fprintf(fid_html,'<p style="clear:left;">R1 MNI images in axial plane:</p>\n');
+fprintf(fid_html,'<a href="#List_full">List of Figures</a>\n');
+
+[img_count] = print_img_html(fid_html,img_count,[subj_name_visit ' MNI wap1 wap1 R1 ' num2str(size(img.MNI.R1,1))],...
+        out.R1_MNI_gif_axial,subj_name_visit,'R1_MNI_gif_axial');  
+    
+%---------------------------------------------------------------------------
+
+% Insert in PD MNI gif
+
+% Hyperlink 
+% fprintf(fid_html,'<a id="MTw_echos_axial"</a>\n');
+
+%fprintf(fid_html,'<h3 style="clear:left;">Structure GIF T1w_echos_axial</h3>\n');
+
+fprintf(fid_html,'<p style="clear:left;">R2s MNI images in axial plane:</p>\n');
+fprintf(fid_html,'<a href="#List_full">List of Figures</a>\n');
+
+[img_count] = print_img_html(fid_html,img_count,[subj_name_visit ' MNI wap1 wap1 R2s ' num2str(size(img.MNI.R2s,1))],...
+        out.R2s_MNI_gif_axial,subj_name_visit,'R2s_MNI_gif_axial');
 %---------------------------------------------------------------------------
 %---------------------------------------------------------------------------
 %---------------------------------------------------------------------------
