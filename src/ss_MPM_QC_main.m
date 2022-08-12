@@ -1,21 +1,28 @@
-function ss_MPM_QC_main()
-% to create html visual report for MPM data
+function ss_MPM_QC_main(job)
+%==========================================================================
+%
+% PURPOSE: to create html visual report for MPM data
+% INPUT  -
+%   job.json_info   - list of MPM for QC 
+%   job.outdir      - output folder 
+% OUTPUT 
+%   create html files in the out folder 
+%_______________________________________________________________________
+% Cyclotron Research Centre - University of Liège
 % Siya Sherif 
-% 09DEC2021 
-% dependencies  SPM12
-%--------------------------------------------------------------------------
-% 02JUN2022
-% add QC for input images
+% 09DEC2021 v.01 
+% 29JULY2022 edit for the spm batch 
+%==========================================================================
 
-close all; clear all;clc;
+% % % close all; clear all;clc;
 
 
 % input Folder
 % TO DO :  shoudl be a  SPM batch - input
 
-main_path   = '/media/siya/ss_14T_2022/MPM_TravelHead_Study/OUTDATA/derivative-01_def_val_with_smap_HiRes/';
-
-BIDS_in     = '/media/siya/ss_14T_2022/MPM_TravelHead_Study/BIDS-pseudo/';
+% % % % % % main_path   = '/media/siya/ss_14T_2022/MPM_TravelHead_Study/OUTDATA/derivative-01_def_val_with_smap_HiRes/';
+% % % % % % 
+% % % % % % BIDS_in     = '/media/siya/ss_14T_2022/MPM_TravelHead_Study/BIDS-pseudo/';
 
 % list all the qc json (easy way to grep the hMRI output results, 
 % WARNING - might grep different runs of hMRI , TO DO , exclude) 
@@ -145,7 +152,7 @@ if run_code == 1
 end
 
 % parpool('local',5)
-% parfor
+% parfor i = 1:size(list_qc_json,1)
 for i = 1:size(list_qc_json,1)
     ss_create_html_report(strtrim(list_qc_json(i,:)),out_table_csv,out_main_path,BIDS_in); % fill array with participants data
 end
