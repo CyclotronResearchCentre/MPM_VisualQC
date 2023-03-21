@@ -100,6 +100,48 @@ fprintf(fid_html,'//   .append("g") \n');
 
 fprintf(fid_html,'// .call(d3.axisLeft(y)); \n');
 
+% may be i should put the animation here 
+
+% % % % % % %--------------------------------------------------------------------------
+% % % % % % % for the mouseover display 
+% % % % % % fprintf(fid_html,'// Add a tooltip div. Here I define the general feature of the tooltip: stuff that do not depend on the data point.  \n');
+% % % % % % fprintf(fid_html,'// Its opacity is set to 0: we dont see it by default. \n');
+% % % % % % fprintf(fid_html,'var tooltip = d3.select("#my_dataviz") \n');
+% % % % % % fprintf(fid_html,'  .append("div") \n'); 
+% % % % % % fprintf(fid_html,'  .style("opacity", 0)  \n');
+% % % % % % fprintf(fid_html,'  .attr("class", "tooltip") \n');
+% % % % % % fprintf(fid_html,'  .style("background-color", "white") \n');
+% % % % % % fprintf(fid_html,'  .style("border", "solid") \n');
+% % % % % % fprintf(fid_html,'  .style("border-width", "1px") \n');
+% % % % % % fprintf(fid_html,'  .style("border-radius", "5px") \n');
+% % % % % % fprintf(fid_html,'  .style("padding", "10px") \n');
+% % % % % % 
+% % % % % % 
+% % % % % % 
+% % % % % % 
+% % % % % % fprintf(fid_html,'// A function that change this tooltip when the user hover a point. \n');
+% % % % % % fprintf(fid_html,'// Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d) \n');
+% % % % % % fprintf(fid_html,'var mouseover = function(d) { \n');
+% % % % % % fprintf(fid_html,'  tooltip \n');
+% % % % % % fprintf(fid_html,'    .style("opacity", 1) \n');
+% % % % % % fprintf(fid_html,'} \n');
+% % % % % %  
+% % % % % % fprintf(fid_html,'var mousemove = function(d) { \n');
+% % % % % % fprintf(fid_html,'tooltip \n');
+% % % % % % fprintf(fid_html,'  .html("The exact value of<br>the Ground Living area is: " + y) \n');
+% % % % % % fprintf(fid_html,'  .style("left", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect \n');
+% % % % % % fprintf(fid_html,'  .style("top", (d3.mouse(this)[1]) + "px") \n');
+% % % % % % fprintf(fid_html,'} \n');
+% % % % % % 
+% % % % % % fprintf(fid_html,'// A function that change this tooltip when the leaves a point: just need to set opacity to 0 again \n');
+% % % % % % fprintf(fid_html,'var mouseleave = function(d) { \n');
+% % % % % % fprintf(fid_html,'  tooltip \n');
+% % % % % % fprintf(fid_html,'    .transition() \n');
+% % % % % % fprintf(fid_html,'    .duration(200) \n');
+% % % % % % fprintf(fid_html,'    .style("opacity", 0) \n');
+% % % % % % fprintf(fid_html,'} \n');
+% % % % % % %-----------------------------------------------------------------------------------------
+
 fprintf(fid_html,'// Y axis label: \n');
 fprintf(fid_html,'svg.append("text") \n');
 fprintf(fid_html,'    .attr("text-anchor", "end") \n');
@@ -173,7 +215,46 @@ fprintf(fid_html,'  .attr("cy", function(d){return(y(d))}) \n');
 fprintf(fid_html,'  .attr("r", 4) \n');
 fprintf(fid_html,'  .style("fill", "black") \n');
 fprintf(fid_html,'  .attr("stroke", "black") \n');
-  
+
+%--------------------------------------------------------------------------
+% % % % for the mouseover display 
+% % % fprintf(fid_html,'// Add a tooltip div. Here I define the general feature of the tooltip: stuff that do not depend on the data point.  \n');
+% % % fprintf(fid_html,'// Its opacity is set to 0: we dont see it by default. \n');
+% % % fprintf(fid_html,'var tooltip = d3.select("#my_dataviz") \n');
+% % % fprintf(fid_html,'  .append("div") \n'); 
+% % % fprintf(fid_html,'  .style("opacity", 0)  \n');
+% % % fprintf(fid_html,'  .attr("class", "tooltip") \n');
+% % % fprintf(fid_html,'  .style("background-color", "white") \n');
+% % % fprintf(fid_html,'  .style("border", "solid") \n');
+% % % fprintf(fid_html,'  .style("border-width", "1px") \n');
+% % % fprintf(fid_html,'  .style("border-radius", "5px") \n');
+% % % fprintf(fid_html,'  .style("padding", "10px") \n');
+% % % 
+% % % 
+% % % 
+% % % 
+% % % fprintf(fid_html,'// A function that change this tooltip when the user hover a point. \n');
+% % % fprintf(fid_html,'// Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d) \n');
+% % % fprintf(fid_html,'var mouseover = function(d) { \n');
+% % % fprintf(fid_html,'  tooltip \n');
+% % % fprintf(fid_html,'    .style("opacity", 1) \n');
+% % % fprintf(fid_html,'} \n');
+% % %  
+% % % fprintf(fid_html,'var mousemove = function(d) { \n');
+% % % fprintf(fid_html,'tooltip \n');
+% % % fprintf(fid_html,'  .html("The exact value of<br>the Ground Living area is: " + d.data) \n');
+% % % fprintf(fid_html,'  .style("left", (d3.mouse(this)[0]+10) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect \n');
+% % % fprintf(fid_html,'  .style("top", (d3.mouse(this)[1]) + "px") \n');
+% % % fprintf(fid_html,'} \n');
+% % % 
+% % % fprintf(fid_html,'// A function that change this tooltip when the leaves a point: just need to set opacity to 0 again \n');
+% % % fprintf(fid_html,'var mouseleave = function(d) { \n');
+% % % fprintf(fid_html,'  tooltip \n');
+% % % fprintf(fid_html,'    .transition() \n');
+% % % fprintf(fid_html,'    .duration(200) \n');
+% % % fprintf(fid_html,'    .style("opacity", 0) \n');
+% % % fprintf(fid_html,'} \n');
+% % %   
 
 fprintf(fid_html,'</script> \n');
 

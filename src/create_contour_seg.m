@@ -3,6 +3,32 @@ function [out_c1_cont_png_folder, out_c2_cont_png_folder, out_c3_cont_png_folder
 % date      : december 2018, 
 % v2 ver    : 17 jan 2019 
 % to create the segmented c1 c2 c3 overlayed on T1 
+
+%==========================================================================
+%
+% PURPOSE: to images
+% INPUT  -
+%   -plot_info
+%       -suffix        - folder name for storing output images
+%       -sl_def        - slice defenition
+%       -transform     - axial or coronal or sagittal 
+%       -xslices       - 1 (slices to display)
+%       -slices        - range of slices
+%       -fig_Position  - figure position
+%       -fig_cmap      - colour map;
+%       -range         - range for the intensity
+%       -T1            - image inputr file; (T1 for historic reasons, TO DO- replce it by in_img )
+%       -out_fold_img  - out_fold_img;
+%       -subj_name_vst - prefix for the outfput files
+% 
+% OUTPUT 
+%   out_png_fold        - out folder containing images 
+%==========================================================================___________________________________________________________
+% Cyclotron Research Centre - University of Liège
+% Siya Sherif 
+% 09DEC2021 v.01 
+% 15AUG2022 edit for the spm batch siya
+%==========================================================================
     
     % define/create ouput folders for the t1 + c segmentation combos
    
@@ -55,7 +81,12 @@ function [out_c1_cont_png_folder, out_c2_cont_png_folder, out_c3_cont_png_folder
     
     if run_code == 1
         
-        close all
+%         close all
+        fg = spm_figure('GetWin','Graphics');
+        spm_figure('Clear',fg);
+        spm_figure('Close',fg);
+        
+        ff = figure(45);
         
         T1 = spm_vol(plot_var.T1);
         c1 = spm_vol(plot_var.c_seg{1});
@@ -91,6 +122,7 @@ function [out_c1_cont_png_folder, out_c2_cont_png_folder, out_c3_cont_png_folder
 
             saveas(gcf,out_png)
         end
+%          close(ff) 
     end
     % ---------------------------------------------------------------------
     % c2 contour
@@ -119,6 +151,13 @@ function [out_c1_cont_png_folder, out_c2_cont_png_folder, out_c3_cont_png_folder
             
     end
     if run_code ==1 
+        
+        fg = spm_figure('GetWin','Graphics');
+        spm_figure('Clear',fg);
+        spm_figure('Close',fg);
+        
+        ff = figure(45);
+        
         so.img(1).prop      = plot_var.t_prop;
         so.img(2).prop      = 0;
         so.img(3).prop      = plot_var.c_prop;
@@ -137,6 +176,7 @@ function [out_c1_cont_png_folder, out_c2_cont_png_folder, out_c3_cont_png_folder
             saveas(gcf,out_png)
 
         end
+        close(ff) 
     end
 
 % % %     % c3 is commented at the moment   
@@ -166,6 +206,7 @@ function [out_c1_cont_png_folder, out_c2_cont_png_folder, out_c3_cont_png_folder
 % % %         
 % % %     end
     
-    close all
+%     close all
+       
 
 end

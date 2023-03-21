@@ -60,7 +60,11 @@ function out_gif_fold = create_MNI_gif(plot_gif)
 % % %             end
 %             tmp_suff = ['tmp_' sprintf('%s_%02d','echo',k) '_axial'];
 %             
-            close all
+            fg = spm_figure('GetWin','Graphics');
+            spm_figure('Clear',fg);
+            spm_figure('Close',fg);
+
+            ff = figure(45)
             
             img_img_vol = spm_vol(tmp_img);
         
@@ -123,7 +127,7 @@ function out_gif_fold = create_MNI_gif(plot_gif)
 
             end
 
-            close all
+            close(ff)
 
         end
             

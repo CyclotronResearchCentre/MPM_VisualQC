@@ -52,11 +52,15 @@ function out_gif_fold = create_gif_echos(plot_gif)
         
         for k=1:size(plot_gif.img ,1)
                       
-            tmp_img = strtrim(plot_gif.img(k,1:end));
+            tmp_img = strtrim(plot_gif.img{k,1:end});
             
 %             tmp_suff = ['tmp_' sprintf('%s_%02d','echo',k) '_axial'];
 %             
-            close all
+            fg = spm_figure('GetWin','Graphics');
+            spm_figure('Clear',fg);
+            spm_figure('Close',fg);
+
+            ff = figure(45);
             
             img_img_vol = spm_vol(tmp_img);
         
@@ -119,7 +123,7 @@ function out_gif_fold = create_gif_echos(plot_gif)
 
             end
 
-            close all
+            close(ff)
 
         end
             

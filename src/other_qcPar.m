@@ -1,4 +1,20 @@
-function TT =  other_qcPar(TT, c6_file)
+function TT =  other_qcPar(TT,tmp_mpm_info)
+%==========================================================================
+%
+% PURPOSE: to create aother QC parameters 
+% INPUT  -
+%   TT      - QC table  
+%   tmp_job_info - mpm info
+% OUTPUT 
+%   create html files in the out folder 
+%_______________________________________________________________________
+% Cyclotron Research Centre - University of Liège
+% Siya Sherif 
+% 09DEC2021 v.01 
+% 29JULY2022 edit for the spm batch 
+%==========================================================================
+
+c6_file = spm_select('FPList',tmp_mpm_info.subj.path.segTEzero,'^c6.*.nii');
 
 % create mask 
 Y_c6   = spm_vol(c6_file);
@@ -16,7 +32,11 @@ ndilate = 4;
 thresh  = 0.5;  % 0.8 value used in ismrm abstract  
 fwhm    = 5;    % 2;
 
-V_c6(:,1:(img_y/2),:) = 0;
+V_c6(:,1:(img_y/2),:) = 0; % top part of the head hask 
+% I am using a dirty hack 
+% TO DO. 
+% 1. create a head mask in MNI template;
+% 2. use inverse transform to bring it ot the subject space      
 
 V_c6mask = connect_it(V_c6);
 
@@ -34,20 +54,26 @@ V_c6mask = connect_it(V_c6);
 c1_main = strrep(c6_file,'c6','c1');
 Y_c1   = spm_vol(c1_main);
 V_c1   = double(spm_read_vols(Y_c1));
-V_c1Mask    = V_c1>0.8;  
+V_c1Mask    = V_c1>0.9;  
 
 c2_main = strrep(c6_file,'c6','c2');
 Y_c2   = spm_vol(c2_main);
 V_c2   = double(spm_read_vols(Y_c2));
-V_c2Mask    = V_c2>0.8;  
+V_c2Mask    = V_c2>0.9;  
  
 
-MTSat  = spm_select('FPList',(fullfile((spm_file(spm_file(c6_file,'path'),'path')),'Results')),'_MTsat.nii');
-PD      = spm_select('FPList',(fullfile((spm_file(spm_file(c6_file,'path'),'path')),'Results')),'_PD.nii');
-R1      = spm_select('FPList',(fullfile((spm_file(spm_file(c6_file,'path'),'path')),'Results')),'_R1.nii');
-R2      = spm_select('FPList',(fullfile((spm_file(spm_file(c6_file,'path'),'path')),'Results')),'_R2s_OLS.nii');
-MTwOLS  = spm_select('FPListRec',(fullfile((spm_file(spm_file(c6_file,'path'),'path')),'Results')),'_MTw_OLSfit_TEzero.nii');
-PDwOLS  = spm_select('FPListRec',(fullfile((spm_file(spm_file(c6_file,'path'),'path')),'Results')),'_PDw_OLSfit_TEzero.nii');
+MTSat   = spm_select('FPList',tmp_mpm_info.subj.path.respath,'_MTsat.nii');
+PD      = spm_select('FPList',tmp_mpm_info.subj.path.respath,'_PD.nii');
+R1      = spm_select('FPList',tmp_mpm_info.subj.path.respath,'_R1.nii');
+R2      = spm_select('FPList',tmp_mpm_info.subj.path.respath,'_R2s_.*.nii');
+MTwOLS  = spm_select('FPList',tmp_mpm_info.subj.path.supplpath,'_MTw_.*fit_TEzero.nii');
+PDwOLS  = spm_select('FPList',tmp_mpm_info.subj.path.supplpath,'_PDw_.*Sfit_TEzero.nii');
+
+MTsat_mSNR  = spm_select('FPList',tmp_mpm_info.subj.path.supplpath,'_MTsat_mSNR.nii');
+PD_mSNR     = spm_select('FPList',tmp_mpm_info.subj.path.supplpath,'_PD_mSNR.nii');
+R1_mSNR     = spm_select('FPList',tmp_mpm_info.subj.path.supplpath,'_R1_mSNR.nii');
+
+
 
 % SNR 
 TT.MTSat_SNR_gm = est_snr(MTSat,V_c1Mask);
@@ -89,11 +115,37 @@ TT.R2_CNR = est_cnr(R2,V_c1Mask,V_c2Mask,V_c6mask);
 
 %---------------------------------------------------------------
 
+% mSNR for GM and WM
 
+TT.MTSat_mSNR_gm = est_mSNR(MTsat_mSNR,V_c1Mask);
+TT.MTSat_mSNR_wm = est_mSNR(MTsat_mSNR,V_c2Mask);
+
+TT.PD_mSNR_gm = est_mSNR(PD_mSNR,V_c1Mask);
+TT.PD_mSNR_wm = est_mSNR(PD_mSNR,V_c2Mask);
+
+TT.R1_mSNR_gm = est_mSNR(R1_mSNR,V_c1Mask);
+TT.R1_mSNR_wm = est_mSNR(R1_mSNR,V_c2Mask);
+
+end
+
+function mSNR_mean = est_mSNR(img_name,V_Mask)
+    % mean mSNR for the mask
+    Y_img   = spm_vol(img_name);
+    V_img   = double(spm_read_vols(Y_img));
+    % apply mask
+    V_img   = V_img.*(V_Mask./V_Mask);
+    
+    % get rid of negative 
+    V_img(V_img(:)<0) = NaN;
+    
+    % mean
+    mSNR_mean = mean(V_img(:),'omitnan');
 
 end
 
 function snr = est_snr(img_name,V_Mask)
+% estimate snr 
+
 Y_img   = spm_vol(img_name);
 V_img   = double(spm_read_vols(Y_img));
 

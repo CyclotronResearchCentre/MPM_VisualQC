@@ -86,7 +86,13 @@ function [out_png_fold,b1_reslice] = plot_Single_image_b1(plot_info)
         %read b1 resliced 
         img_b1_vol = spm_vol(b1_reslice);
         
-        close all
+% %         close all
+        fg = spm_figure('GetWin','Graphics');
+        spm_figure('Clear',fg);
+        spm_figure('Close',fg);
+        
+        ff = figure(45);
+        
         so = slover(img_b1_vol);
 
         so.xslices          = plot_info.xslices ;
@@ -112,7 +118,7 @@ function [out_png_fold,b1_reslice] = plot_Single_image_b1(plot_info)
             saveas(gcf,out_png)
         end
 
-        close all
+        close(ff)
         
     else
         temp_b1 =  spm_file(plot_info.b1,'path',out_png_fold);

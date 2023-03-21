@@ -1,4 +1,30 @@
 function out_png_fold = plot_Single_image(plot_info)
+%==========================================================================
+%
+% PURPOSE: to images
+% INPUT  -
+%   -plot_info
+%       -suffix        - folder name for storing output images
+%       -sl_def        - slice defenition
+%       -transform     - axial or coronal or sagittal 
+%       -xslices       - 1 (slices to display)
+%       -slices        - range of slices
+%       -fig_Position  - figure position
+%       -fig_cmap      - colour map;
+%       -range         - range for the intensity
+%       -T1            - image inputr file; (T1 for historic reasons, TO DO- replce it by in_img )
+%       -out_fold_img  - out_fold_img;
+%       -subj_name_vst - prefix for the outfput files
+% 
+% OUTPUT 
+%   out_png_fold        - out folder containing images 
+%==========================================================================___________________________________________________________
+% Cyclotron Research Centre - University of Liège
+% Siya Sherif 
+% 09DEC2021 v.01 
+% 15AUG2022 edit for the spm batch siya
+%==========================================================================
+
   
     % define out folder , create folder if it doesnt exist
     out_png_fold = fullfile(plot_info.out_fold_img,plot_info.subj_name_vst,plot_info.suffix);
@@ -45,7 +71,12 @@ function out_png_fold = plot_Single_image(plot_info)
         %read T1
         img_T1_vol = spm_vol(plot_info.T1);
         
-        close all
+%         close all
+        fg = spm_figure('GetWin','Graphics');
+        spm_figure('Clear',fg);
+        spm_figure('Close',fg);
+        
+        ff = figure(45);
         so = slover(img_T1_vol);
 
         so.xslices          = plot_info.xslices ;
@@ -71,7 +102,7 @@ function out_png_fold = plot_Single_image(plot_info)
             saveas(gcf,out_png)
         end
 
-        close all
+        close(ff) 
     end
     
 end
